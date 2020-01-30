@@ -1,48 +1,54 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from bottle import route, run
+from bottle import route, run, response
 from pylgtv import WebOsClient
 import json
 from configs import tv_ip
 
-webos_client = None
-
-@route('/init')
-def index():
-    try:
-        webos_client = WebOsClient(tv_ip)
-        return json.dumps("Sua TV foi conectada")
-    except:
-        return json.dumps("Ocorreu um erro a se conectar com sua TV")
-
-
 @route('/volume/<vol>')
 def volume(vol):
-    if webos_client == None:
-        return json.dumps(" Por favor, inicialize a conexão com a TV antes de enviar um comando ")
+    response.content_type = 'application/json'
     
-    webos_client.set_volume(int(vol))
-    return json.dumps("Volume aumentado para: " + vol)
+    try:
+        webos_client = WebOsClient(tv_ip)
+
+        webos_client.set_volume(int(vol))
+        return json.dumps("Volume aumentado para: " + vol)
+    except:
+        return json.dumps("Ocorreu um erro ao se conectar com sua TV")
 
 
 @route('/apps')
 def get_apps():
-    if webos_client == None:
-        return json.dumps(" Por favor, inicialize a conexão com a TV antes de enviar um comando ")
+    response.content_type = 'application/json'
 
-    apps = []
-    # for app in webos_client.get_apps():
-    #     apps.append(app)
-    return json.dumps(apps)
+    try:
+        # webos_client = WebOsClient(tv_ip)
+
+        apps = []
+        apps.append('netflix')
+        apps.append('prime')
+
+        # for app in webos_client.get_apps():
+        #     apps.append(app)
+
+        return json.dumps(apps)
+    except:
+        return json.dumps("Ocorreu um erro ao se conectar com sua TV")
+
 
 @route('/apps/<app>')
-def get_apps(app):
-    if webos_client == None:
-        return json.dumps(" Por favor, inicialize a conexão com a TV antes de enviar um comando ")
+def set_app(app):
+    response.content_type = 'application/json'
 
-    # webos_client.launch_app(app)
-    return json.dumps("Aplicativo " + app + " iniciado")
+    try:
+        webos_client = WebOsClient(tv_ip)
+
+        webos_client.launch_app(app)
+        return json.dumps("Aplicativo " + app + " iniciado")
+    except:
+        return json.dumps("Ocorreu um erro ao se conectar com sua TV")
 
 
 run(host='localhost', port=8080)
