@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from bottle import route, run
 from pylgtv import WebOsClient
 import json
@@ -16,20 +19,28 @@ def index():
 
 @route('/volume/<vol>')
 def volume(vol):
-    # webos_client.set_volume(int(vol))
+    if webos_client == None:
+        return json.dumps(" Por favor, inicialize a conexão com a TV antes de enviar um comando ")
+    
+    webos_client.set_volume(int(vol))
     return json.dumps("Volume aumentado para: " + vol)
 
 
 @route('/apps')
 def get_apps():
+    if webos_client == None:
+        return json.dumps(" Por favor, inicialize a conexão com a TV antes de enviar um comando ")
+
     apps = []
     # for app in webos_client.get_apps():
     #     apps.append(app)
     return json.dumps(apps)
 
-
 @route('/apps/<app>')
 def get_apps(app):
+    if webos_client == None:
+        return json.dumps(" Por favor, inicialize a conexão com a TV antes de enviar um comando ")
+
     # webos_client.launch_app(app)
     return json.dumps("Aplicativo " + app + " iniciado")
 
