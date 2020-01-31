@@ -6,6 +6,7 @@ from pylgtv import WebOsClient
 import json
 from configs import tv_ip
 
+# VOLUME
 @route('/volume')
 def get_volume():
     response.content_type = 'application/json'
@@ -30,6 +31,7 @@ def set_volume(vol):
     except:
         return json.dumps("Ocorreu um erro ao se conectar com sua TV")
 
+# ENTRADA
 @route('/input/<id>')
 def set_entrada(id):
     response.content_type = 'application/json'
@@ -54,6 +56,7 @@ def get_entradas():
     except:
         return json.dumps("Ocorreu um erro ao se conectar com sua TV")
 
+# APLICATIVOS
 @route('/apps')
 def get_apps():
     response.content_type = 'application/json'
